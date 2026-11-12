@@ -140,6 +140,24 @@ Fix submitted as PR: https://github.com/aaron-gh/SandFly/pull/81
 (branch `fix/nos-pivot-missing-from-traversal-map`, off a fresh `master` —
 kept separate from this notes branch).
 
+**Update (reworked after maintainer review):** the `OrderedTraversalController`
+change above was reverted. The maintainer correctly pointed out that its
+fallback returns the tree's own root almost every time (the root is always the
+first `nodeTreeMap` entry, and its bounds span its whole subtree, so it always
+has the most extreme top/bottom), not a node near the pivot — confirmed by
+reading `createWorkingTree()`. The fix now lives entirely in
+`FocusProcessorForLogicalNavigation.java`, anchored to the pivot's own live
+position within the one local tree missing it, explicitly skipping that tree's
+root entry, wired into two call sites confirmed by testing to hit this
+(`handleViewAutoScrolledForDirectionalNavigationWithDefaultTarget` and a second,
+independent path, `focusNextItemIfShown`, found only because testing reached
+it). Re-verified on-device in both directions.
+
+A separate, narrower skip also turned up in testing: one specific
+image-caption element (a duplicated node pair at identical bounds, one of
+class `ipc`) is consistently skipped in both directions, with no map-miss
+warning preceding it — not this bug, left open for future investigation.
+
 ## Rebound recycled view (separate, still open)
 
 Neither fix handles a *rebound recycled view*: a recycled `AccessibilityNodeInfo`
