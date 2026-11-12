@@ -136,6 +136,10 @@ report-inbox code, confirmed failing identically on unmodified `master`). On
 device, the exact repro that reliably failed twice no longer reproduces after
 the fix.
 
+Fix submitted as PR: https://github.com/aaron-gh/SandFly/pull/81
+(branch `fix/nos-pivot-missing-from-traversal-map`, off a fresh `master` —
+kept separate from this notes branch).
+
 ## Rebound recycled view (separate, still open)
 
 Neither fix handles a *rebound recycled view*: a recycled `AccessibilityNodeInfo`
